@@ -2,11 +2,9 @@ package testCode
 
 import AppDisplayManager.AbstractAppDisplayManager
 import processing.core.PConstants
-import processing.core.PGraphics
 import processingKit.LogUtils
 import processingKit.PImageEditUtils
 import processingKit.PImageManager
-import processingKit.Utils
 import java.lang.Exception
 
 class TestAppDisplayManager() : AbstractAppDisplayManager(){
