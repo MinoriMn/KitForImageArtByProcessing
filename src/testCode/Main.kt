@@ -1,6 +1,7 @@
 package testCode
 
 import AppDisplayManager.AbstractAppDisplayManager
+import processing.core.PConstants
 import processing.core.PGraphics
 import processingKit.LogUtils
 import processingKit.PImageEditUtils
@@ -32,7 +33,7 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
     }
 
     override fun setup() {
-        frameRate = 20f
+        frameRate(5f)
     }
 
     override fun draw() {
@@ -48,8 +49,12 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
                 canvas.noStroke()
                 canvas.image(img, 0f, 0f)
                 PImageEditUtils.drawImageByEllipse(canvas, img,
-                    10000, 10f, 1f, 20f, 2f,
-                    0f, 180f, 100f)
+                    10000, 5f, 5f, 10f, 5f,
+                    0f, 180f, 255f, 0f)
+                canvas.blendMode(PConstants.ADD)
+                PImageEditUtils.drawImageByEllipse(canvas, img,
+                    2000, 1f, 1f, 30f, 1f,
+                    50f, 20f, 0f, 255f)
                 canvas.endDraw()
                 image(canvas, 0f, 0f)
             }

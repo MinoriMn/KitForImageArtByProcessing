@@ -25,9 +25,9 @@ class PImageEditUtils{
             colorPImage: PImage,
             amount: Int,
             minA: Float, minB: Float, rangeA: Float, rangeB: Float,
-            minDeg: Float, rangeDeg: Float, alpha: Float
+            minDeg: Float, rangeDeg: Float, minAlpha: Float, rangeAlpha: Float
         ) : PGraphics{
-            if(minA < 0 || minB < 0 || minDeg < 0 || amount < 0 || alpha < 0){
+            if(minA < 0 || minB < 0 || minDeg < 0 || amount < 0 || minAlpha < 0){
                 LogUtils.e("drawImageByEllipses", "IllegalStateException")
                 return canvasPG
             }
@@ -46,7 +46,7 @@ class PImageEditUtils{
                 //TODO Color
                 val color = colorPImage.get((randW * colorPW).toInt(), (randH * colorPH).toInt())
                 with(canvasPG){
-                    fill(color, alpha)
+                    fill(color, minAlpha + random.nextFloat() * rangeAlpha)
                     pushMatrix()
                     translate(randW * canvasPW, randH * canvasPH)
                     rotate(radians(minDeg + random.nextFloat() * rangeDeg))
