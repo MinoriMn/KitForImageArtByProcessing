@@ -1,7 +1,9 @@
 package testCode
 
 import AppDisplayManager.AbstractAppDisplayManager
+import processing.core.PGraphics
 import processingKit.LogUtils
+import processingKit.PImageEditUtils
 import processingKit.PImageManager
 import processingKit.Utils
 import java.lang.Exception
@@ -20,8 +22,6 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
     private val imagesSize = imageNames.size
 
     override fun settings() {
-        LogUtils.d(imageNames.toString())
-
         pImageManager = PImageManager(imageNames, this, imageResizeRatio)
 
         if(pImageManager.imgMaxWidth != Integer.MIN_VALUE && pImageManager.imgMaxHeight != Integer.MIN_VALUE) {
@@ -32,12 +32,28 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
     }
 
     override fun setup() {
-        for (i in imagesSize - 1 downTo 0){
-            image(pImageManager.getImage(i), 0f, 0f)
-        }
+        frameRate = 20f
     }
 
     override fun draw() {
+        background(255)
+        for (i in imagesSize - 1 downTo 0){
+            if(i != imagesSize - 1) {
+                image(pImageManager.getImage(i), 0f, 0f)
+            }else{
+                val img = pImageManager.getImage(i)
+                val canvas = createGraphics(img.width, img.height)
+
+                canvas.beginDraw()
+                canvas.noStroke()
+                canvas.image(img, 0f, 0f)
+                PImageEditUtils.drawImageByEllipse(canvas, img,
+                    10000, 10f, 1f, 20f, 2f,
+                    0f, 180f, 100f)
+                canvas.endDraw()
+                image(canvas, 0f, 0f)
+            }
+        }
     }
 
 }

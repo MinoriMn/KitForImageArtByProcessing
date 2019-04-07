@@ -27,7 +27,6 @@ class PImageManager(imageNames: Array<String>, pApplet: PApplet, resizeRatio : F
             if(imgMinHeight > images[i].height){imgMinHeight = images[i].height}
         }
 
-        LogUtils.d("imgMaxW", imgMaxWidth.toString())
     }
 
     fun getImage(index: Int): PImage {
