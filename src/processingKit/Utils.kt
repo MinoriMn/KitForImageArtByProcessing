@@ -1,7 +1,9 @@
 package processingKit
 
+import com.sun.istack.internal.NotNull
+import processing.core.PApplet
 import java.io.File
-
+import javax.swing.*
 
 
 class Utils{
@@ -31,5 +33,83 @@ class LogUtils{
         fun e(tag:String, msg:String) = if(isLOG) println("E/${tag}: ${msg}")  else null
 
         val TAG_DEBUG = "DEBUG"
+    }
+}
+
+class SaveFrameUtils(@NotNull private val pApplet: PApplet, savePath: String? = null ,private val maxFrameNum: Int = Int.MAX_VALUE){
+    private var isSaveFrame = false
+    private var framePrefix = "test_name"
+    private var frameSuffix = ".tif"
+    private var frameNum = 0
+
+    private var savePath: String = Utils.pwd()
+
+    init {
+        checkSaveFrameDialog(savePath)
+    }
+
+    private fun checkSaveFrameDialog(savePath: String?){
+        //TODO Dialog
+        val panel = JPanel()
+        val layout = BoxLayout(panel, BoxLayout.Y_AXIS)
+
+        panel.layout = layout
+        panel.add(JLabel("フレーム書き出しを実行しますか？"))
+        if(JOptionPane.showConfirmDialog(
+            null,
+            panel,
+            "フレーム出力の確認",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE
+        ) == 1){ return }
+
+        this.isSaveFrame = true
+
+        panel.removeAll()
+        panel.add(JLabel("書き出す画像の名前を決めてください。"))
+        this.framePrefix = JOptionPane.showInputDialog(
+            null,
+             panel,
+            "test_name")
+
+        panel.removeAll()
+        panel.add(JLabel("拡張子を入力してください"))
+        this.frameSuffix = JOptionPane.showInputDialog(
+            null,
+            panel,
+            "tif")
+
+        if(savePath != null) {
+            this.savePath = savePath
+        }else{
+            val chooser = JFileChooser()
+            chooser.selectedFile = File(Utils.pwd())
+            chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+            chooser.showOpenDialog(null)
+            val selectedFile = chooser.selectedFile
+            if(selectedFile != null){
+                this.savePath = selectedFile.absolutePath
+                LogUtils.i("SaveFrameUtils Path", "selected path ${this.savePath}")
+            }else{
+                LogUtils.i("SaveFrameUtils Path", "didn't select ${this.savePath}")
+            }
+        }
+
+        this.framePrefix = framePrefix
+        this.frameSuffix = frameSuffix
+    }
+
+    fun saveFrame(frameNum: Int? = null){
+        if(isSaveFrame) {
+            val tempFrameNum = frameNum ?: (this.frameNum++)
+            if(tempFrameNum < maxFrameNum) {
+                LogUtils.i(
+                    "Processing_saving_frame",
+                    "Try to save ${framePrefix}_%04d.${frameSuffix}".format(tempFrameNum)
+                )
+                val frameName = "${framePrefix}_%04d.${frameSuffix}".format(tempFrameNum)
+                pApplet.save("${savePath}/${frameName}")
+            }
+        }
     }
 }

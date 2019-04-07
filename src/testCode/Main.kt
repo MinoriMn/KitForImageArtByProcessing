@@ -2,9 +2,7 @@ package testCode
 
 import AppDisplayManager.AbstractAppDisplayManager
 import processing.core.PConstants
-import processingKit.LogUtils
-import processingKit.PImageEditUtils
-import processingKit.PImageManager
+import processingKit.*
 import java.lang.Exception
 
 class TestAppDisplayManager() : AbstractAppDisplayManager(){
@@ -16,6 +14,7 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
         "${pathHead}hyousi_0003_hill.png",
         "${pathHead}hyousi_0004_background.png")
     private val imageResizeRatio = 0.3f
+    private val saveFrameUtils = SaveFrameUtils(this, maxFrameNum = 100)
 
     lateinit var pImageManager: PImageManager
     private val imagesSize = imageNames.size
@@ -38,6 +37,7 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
         background(255)
         for (i in imagesSize - 1 downTo 0){
             if(i != imagesSize - 1) {
+                blendMode( if(random(1f) > 0.1f) PConstants.BLEND else PConstants.SUBTRACT)
                 image(pImageManager.getImage(i), 0f, 0f)
             }else{
                 val img = pImageManager.getImage(i)
@@ -57,6 +57,8 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
                 image(canvas, 0f, 0f)
             }
         }
+
+        saveFrameUtils.saveFrame()
     }
 
 }
