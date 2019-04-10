@@ -10,13 +10,13 @@ class Utils{
     companion object {
         fun pwd() : String {
             val cd = File(".").absoluteFile.parent
-            LogUtils.i("cd", cd)
+            LogUtil.i("cd", cd)
             return cd
         }
     }
 }
 
-class LogUtils{
+class LogUtil{
     companion object {
         var isLOG = false
 
@@ -36,7 +36,7 @@ class LogUtils{
     }
 }
 
-class SaveFrameUtils(@NotNull private val pApplet: PApplet, savePath: String? = null ,private val maxFrameNum: Int = Int.MAX_VALUE){
+class SaveFrameUtil(@NotNull private val pApplet: PApplet, savePath: String? = null ,private val maxFrameNum: Int = Int.MAX_VALUE){
     private var isSaveFrame = false
     private var framePrefix = "test_name"
     private var frameSuffix = ".tif"
@@ -49,7 +49,6 @@ class SaveFrameUtils(@NotNull private val pApplet: PApplet, savePath: String? = 
     }
 
     private fun checkSaveFrameDialog(savePath: String?){
-        //TODO Dialog
         val panel = JPanel()
         val layout = BoxLayout(panel, BoxLayout.Y_AXIS)
 
@@ -89,9 +88,9 @@ class SaveFrameUtils(@NotNull private val pApplet: PApplet, savePath: String? = 
             val selectedFile = chooser.selectedFile
             if(selectedFile != null){
                 this.savePath = selectedFile.absolutePath
-                LogUtils.i("SaveFrameUtils Path", "selected path ${this.savePath}")
+                LogUtil.i("SaveFrameUtils Path", "selected path ${this.savePath}")
             }else{
-                LogUtils.i("SaveFrameUtils Path", "didn't select ${this.savePath}")
+                LogUtil.i("SaveFrameUtils Path", "didn't select ${this.savePath}")
             }
         }
 
@@ -103,7 +102,7 @@ class SaveFrameUtils(@NotNull private val pApplet: PApplet, savePath: String? = 
         if(isSaveFrame) {
             val tempFrameNum = frameNum ?: (this.frameNum++)
             if(tempFrameNum < maxFrameNum) {
-                LogUtils.i(
+                LogUtil.i(
                     "Processing_saving_frame",
                     "Try to save ${framePrefix}_%04d.${frameSuffix}".format(tempFrameNum)
                 )
@@ -111,5 +110,11 @@ class SaveFrameUtils(@NotNull private val pApplet: PApplet, savePath: String? = 
                 pApplet.save("${savePath}/${frameName}")
             }
         }
+    }
+}
+
+class TheNumberOfFramesMultiplyUtil{
+    companion object {
+        var ratio = 1f
     }
 }

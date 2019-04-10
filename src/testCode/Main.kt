@@ -9,12 +9,12 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
     private val pathHead = "res/"
     private val imageNames = arrayOf(
         "${pathHead}hyousi_0000_yagura.png",
-        "${pathHead}hyousi_0001_girl.png",
+//        "${pathHead}hyousi_0001_girl.png",
         "${pathHead}hyousi_0002_tent.png",
         "${pathHead}hyousi_0003_hill.png",
         "${pathHead}hyousi_0004_background.png")
-    private val imageResizeRatio = 0.3f
-    private val saveFrameUtils = SaveFrameUtils(this, maxFrameNum = 100)
+    private val imageResizeRatio = 0.5f
+    private val saveFrameUtils = SaveFrameUtil(this, maxFrameNum = 2)
 
     lateinit var pImageManager: PImageManager
     private val imagesSize = imageNames.size
@@ -30,14 +30,15 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
     }
 
     override fun setup() {
-        frameRate(5f)
     }
+
+    private var dx = 0f
+    private var dy = 0f
 
     override fun draw() {
         background(255)
         for (i in imagesSize - 1 downTo 0){
             if(i != imagesSize - 1) {
-                blendMode( if(random(1f) > 0.1f) PConstants.BLEND else PConstants.SUBTRACT)
                 image(pImageManager.getImage(i), 0f, 0f)
             }else{
                 val img = pImageManager.getImage(i)
@@ -46,15 +47,33 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
                 canvas.beginDraw()
                 canvas.noStroke()
                 canvas.image(img, 0f, 0f)
-                PImageEditUtils.drawImageByEllipse(canvas, img,
-                    10000, 5f, 5f, 10f, 5f,
+                PImageEditUtils.drawImageByRandomEllipse(canvas, img,
+                    10000, 8f, 8f, 15f, 8f,
                     0f, 180f, 255f, 0f)
                 canvas.blendMode(PConstants.ADD)
-                PImageEditUtils.drawImageByEllipse(canvas, img,
-                    2000, 1f, 1f, 30f, 1f,
+                PImageEditUtils.drawImageByRandomEllipse(canvas, img,
+                    2000, 2f, 1f, 45f, 1f,
                     50f, 20f, 0f, 255f)
                 canvas.endDraw()
+
+                blendMode(PConstants.SUBTRACT)
+
+                dx += random(-0.2f, 0.2f)
+                dy += random(-0.2f, 0.2f)
+                val r = 5f
+                dx = if(dx < -r) -r else if (dx > r) r else dx
+                dy = if(dy < -r) -r else if (dy > r) r else dy
+
+
+                tint(255f, 0f, 0f)
+                image(canvas, dx, 0f)
+                tint(0f, 255f, 0f)
+                image(canvas, -dx, 0f)
+                tint(0f, 0f, 255f)
                 image(canvas, 0f, 0f)
+                noTint()
+                blendMode(PConstants.BLEND)
+
             }
         }
 
@@ -64,7 +83,7 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
 }
 
 fun main(args: Array<String>){
-    LogUtils.isLOG = true
+    LogUtil.isLOG = true
 
     AbstractAppDisplayManager.run<TestAppDisplayManager>()
 }

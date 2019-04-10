@@ -15,7 +15,7 @@ class PImageManager(imageNames: Array<String>, pApplet: PApplet, resizeRatio : F
         get() = images.size
 
     init {
-        LogUtils.d("${imageNames.size}")
+        LogUtil.d("${imageNames.size}")
 
         for (i in 0 until imageNames.size) {
             images.add(pApplet.loadImage(imageNames[i]).also {
