@@ -116,12 +116,17 @@ class SaveFrameUtil(@NotNull private val pApplet: PApplet, savePath: String? = n
 class TheNumberOfFramesMultiplyUtil{
     companion object {
         var ratio = 1f
+
+        fun frameMultiply(frame: Int): Int{
+            return (frame * ratio).toInt()
+        }
     }
 }
 
-class Queue<T> (list:MutableList<T>){
+class Queue<T>{
 
-    var items:MutableList<T> = list
+
+    var items:MutableList<T> = mutableListOf()
 
     fun isEmpty():Boolean = items.isEmpty()
 
@@ -134,10 +139,22 @@ class Queue<T> (list:MutableList<T>){
     }
 
     fun dequeue():T?{
-        if (this.isEmpty()){
-            return null
+        return if (this.isEmpty()){
+            null
         } else {
-            return items.removeAt(0)
+            items.removeAt(0)
+        }
+    }
+
+    fun last(): T?{
+        return this.get(size() - 1)
+    }
+
+    fun get(index: Int): T?{
+        return if (this.isEmpty()){
+            null
+        } else {
+            items.get(index)
         }
     }
 

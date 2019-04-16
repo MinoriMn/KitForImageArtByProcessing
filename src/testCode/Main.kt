@@ -85,5 +85,6 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
 fun main(args: Array<String>){
     LogUtil.isLOG = true
 
-    AbstractAppDisplayManager.run<TestAppDisplayManager>()
+//    AbstractAppDisplayManager.run<TestAppDisplayManager>()
+    AbstractAppDisplayManager.run<TestKeyFrameController>()
 }
