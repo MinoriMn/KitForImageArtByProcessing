@@ -4,7 +4,7 @@ import processingKit.TheNumberOfFramesMultiplyUtil.Companion.frameMultiply
 
 /**
  * KeyFrameController
- * @param initInfos
+ * @param initInfos　初期化キーフレーム情報 initInfo = Pair<キー名 : String, キーフレーム : ArrayList<AddKeyFrameData>>
  */
 class KeyFrameController(initInfos: Array<Pair<String, ArrayList<AddKeyFrameData>>>){
     private val keyNamesMap: Map<String, Int> //キー名 -> 連番

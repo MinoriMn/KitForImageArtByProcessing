@@ -27,16 +27,17 @@ class TestKeyFrameController: AbstractAppDisplayManager(){
         val p2x : Pair<String, ArrayList<AddKeyFrameData>> = Pair("p2x",
             arrayListOf(
                 //    data class AddKeyFrameData(val frame: Int, val position: Float, val transitionType: TransitionType = TransitionType.Linear, val positionType: PositionType = PositionType.Absolute, val keyFrameSetType: KeyFrameSetType = KeyFrameSetType.Absolute)
-                AddKeyFrameData(0, 0f),
-                AddKeyFrameData(200, 200f, TransitionType.END_OF_KEY_FRAME)
-            )
+                AddKeyFrameData(0, 0f, TransitionType.QuarticEaseInOut),
+                AddKeyFrameData(200, 200f, TransitionType.QuarticEaseInOut),
+                AddKeyFrameData(400, 0f, TransitionType.END_OF_KEY_FRAME)
+        )
         )
 
         val p2y : Pair<String, ArrayList<AddKeyFrameData>> = Pair("p2y",
             arrayListOf(
                 //    data class AddKeyFrameData(val frame: Int, val position: Float, val transitionType: TransitionType = TransitionType.Linear, val positionType: PositionType = PositionType.Absolute, val keyFrameSetType: KeyFrameSetType = KeyFrameSetType.Absolute)
-                AddKeyFrameData(0, 0f, TransitionType.QuarticEaseInOut),
-                AddKeyFrameData(200, 200f, TransitionType.END_OF_KEY_FRAME)
+                AddKeyFrameData(0, 0f, TransitionType.Linear),
+                AddKeyFrameData(300, 150f, TransitionType.END_OF_KEY_FRAME)
             )
         )
 
@@ -69,7 +70,7 @@ class TestKeyFrameController: AbstractAppDisplayManager(){
 
         if(p1x != keyFrameController.NOT_ON_KEY_FRAME && p1y != keyFrameController.NOT_ON_KEY_FRAME){
             fill(0f, 0f, 0f, 100f)
-            ellipse(p1x, p1y, 2f, 2f)
+//            ellipse(p1x, p1y, 2f, 2f)
         }
 
         if(p2x != keyFrameController.NOT_ON_KEY_FRAME && p2y != keyFrameController.NOT_ON_KEY_FRAME){
