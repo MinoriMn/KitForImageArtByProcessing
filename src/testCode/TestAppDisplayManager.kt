@@ -14,7 +14,9 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
         "${pathHead}hyousi_0003_hill.png",
         "${pathHead}hyousi_0004_background.png")
     private val imageResizeRatio = 0.5f
-    private val saveFrameUtils = SaveFrameUtil(this, maxFrameNum = 2)
+
+//    private val saveFrameUtils = SaveFrameUtil(this, maxFrameNum = 2)
+    private val saveGifUtil = SaveGifUtil(this, null, 40, 0, 10, 20f)
 
     lateinit var pImageManager: PImageManager
     private val imagesSize = imageNames.size
@@ -77,14 +79,7 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
             }
         }
 
-        saveFrameUtils.saveFrame()
+        saveGifUtil.addFrame()
     }
 
-}
-
-fun main(args: Array<String>){
-    LogUtil.isLOG = true
-
-//    AbstractAppDisplayManager.run<TestAppDisplayManager>()
-    AbstractAppDisplayManager.run<TestKeyFrameController>()
 }

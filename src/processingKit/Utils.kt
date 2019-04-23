@@ -4,7 +4,7 @@ import com.sun.istack.internal.NotNull
 import processing.core.PApplet
 import java.io.File
 import javax.swing.*
-
+import gifAnimation.*
 
 class Utils{
     companion object {
@@ -111,6 +111,126 @@ class SaveFrameUtil(@NotNull private val pApplet: PApplet, savePath: String? = n
             }
         }
     }
+}
+
+class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = null, private val maxFrameNum: Int = Int.MAX_VALUE, repeat: Int? = null, quality: Int? = null, delay: Int? = null){
+    private val gifExport : GifMaker
+    private var isSaveFrame = false
+    private var framePrefix = "no_name"
+    private var frameNum = 0
+    private var savePath: String = Utils.pwd()
+
+    init {
+        val panel = JPanel()
+        val layout = BoxLayout(panel, BoxLayout.Y_AXIS)
+
+        panel.layout = layout
+        panel.add(JLabel("フレーム書き出しを実行しますか？"))
+        if(JOptionPane.showConfirmDialog(
+                null,
+                panel,
+                "フレーム出力の確認",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+            ) != 1){ this.isSaveFrame = true }
+
+
+        panel.removeAll()
+        panel.add(JLabel("書き出す画像の名前を決めてください。"))
+        this.framePrefix = JOptionPane.showInputDialog(
+            null,
+            panel,
+            "test_name")
+
+        if(savePath != null) {
+            this.savePath = savePath
+        }else{
+            val chooser = JFileChooser()
+            chooser.selectedFile = File(Utils.pwd())
+            chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+            chooser.showOpenDialog(null)
+            val selectedFile = chooser.selectedFile
+            if(selectedFile != null){
+                this.savePath = selectedFile.absolutePath
+                LogUtil.i("SaveFrameUtils Path", "selected path ${this.savePath}")
+            }else{
+                LogUtil.i("SaveFrameUtils Path", "didn't select ${this.savePath}")
+            }
+        }
+
+        gifExport = GifMaker(pApplet, "${this.savePath}/${framePrefix}.gif")
+
+        if(repeat != null){
+            gifExport.setRepeat(repeat)
+        }
+
+        if (quality != null) {
+            gifExport.setQuality(quality)
+        }
+
+        if (delay != null) {
+            gifExport.setDelay(delay)
+        }
+    }
+
+    constructor(@NotNull pApplet: PApplet, savePath: String? = null, maxFrameNum: Int = Int.MAX_VALUE, repeat: Int? = null, quality: Int? = null, fps: Float? = null): this(pApplet, savePath, maxFrameNum, repeat, quality, if(fps != null) (1000 / fps).toInt() else null)
+
+    /**
+     * repeat == 0 means endless repeats.
+     */
+    fun setRepeat(repeat : Int){
+        if(isSaveFrame){
+            gifExport.setRepeat(repeat)
+        }
+    }
+
+    /**
+     * the default of quality is 10.
+     */
+    fun setQuality(quality : Int){
+        if(isSaveFrame){
+            gifExport.setQuality(quality)
+        }
+    }
+
+    fun setDelay(delay : Int){
+        if(isSaveFrame){
+            gifExport.setDelay(delay)
+        }
+    }
+
+    fun setFps(fps : Float){
+        if(isSaveFrame){
+            this.setDelay((1000 / fps).toInt())
+        }
+    }
+
+    fun addFrame(){
+        if(isSaveFrame){
+            val tempFrameNum = frameNum++
+            if(tempFrameNum < maxFrameNum) {
+                LogUtil.i(
+                    "Processing_saving_frame",
+                    "Try to save ${framePrefix}.gif add frame:%04d".format(tempFrameNum)
+                )
+                gifExport.addFrame()
+            }else if(tempFrameNum == maxFrameNum){
+                LogUtil.i(
+                    "Processing_saving_frame",
+                    "finish ${framePrefix}.gif"
+                )
+                finish()
+            }
+        }
+    }
+
+    fun finish(){
+        if(isSaveFrame){
+            gifExport.finish()
+        }
+    }
+
+    fun getGifExport() : GifMaker = gifExport
 }
 
 class TheNumberOfFramesMultiplyUtil{
