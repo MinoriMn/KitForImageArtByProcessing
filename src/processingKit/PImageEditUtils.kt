@@ -45,6 +45,36 @@ class PImageEditUtils private constructer(){
             return drawImageByEllipse(canvasPG, colorPImage, arrayPositions, minA, minB, rangeA, rangeB, minDeg, rangeDeg, minAlpha, rangeAlpha)
         }
 
+        fun fillColor(
+		canvas: PImage,
+		point: Pair<Int, Int>,
+		color: Int,
+		isNeededPaint: (Int, Int) -> Boolean = {oldColor, targetColor -> oldColor == targetColor}
+	){
+		val stack = Stack<Pair<Int, Int>>()
+		stack.push(point)
+		val targetColor = canvas.get(point.first, point.second)
+		
+		while(!stack.isEmpty()){
+			val p = stack.pop()
+			if(p == null){continue}
+			if(p.first < 0 || p.first >= canvas.width || p.second < 0 || p.second >= canvas.height){
+				continue
+			}
+			
+			val pColor = canvas.get(p.first, p.second)
+			if(pColor != color && isNeededPaint(pColor, targetColor)){
+			canvas.set(p.first, p.second, color)
+			
+			stack.push(Pair(p.first - 1, p.second))
+			stack.push(Pair(p.first + 1, p.second))
+			stack.push(Pair(p.first, p.second - 1))
+			stack.push(Pair(p.first, p.second + 1))
+			}
+		}
+	}
+	
+
         /**
          * drawImageByEllipse 画像を楕円形で描画する
          * @param canvasPG 出力画像
