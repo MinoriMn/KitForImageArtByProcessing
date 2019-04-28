@@ -280,3 +280,25 @@ class Queue<T>{
         return items[0]
     }
 }
+
+class Stack<T>(){
+	private val items:MutableList<T> = mutableListOf()
+	
+	fun isEmpty():Boolean = items.isEmpty()
+	
+	fun size():Int = items.count()
+	
+	override  fun toString() = items.toString()
+	
+	fun push(e: T){
+		items.add(e)
+	}
+	
+	fun pop(): T?{
+		return if(this.isEmpty()){
+			null
+		}else{
+			items.removeAt(this.size() - 1)
+		}
+	}
+}
