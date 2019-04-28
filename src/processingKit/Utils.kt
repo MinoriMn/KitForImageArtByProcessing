@@ -6,7 +6,7 @@ import java.io.File
 import javax.swing.*
 import gifAnimation.*
 
-class Utils{
+class Utils private constructer(){
     companion object {
         fun pwd() : String {
             val cd = File(".").absoluteFile.parent
@@ -16,7 +16,7 @@ class Utils{
     }
 }
 
-class LogUtil{
+class LogUtil private constructer(){
     companion object {
         var isLOG = false
 
@@ -233,7 +233,7 @@ class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = nu
     fun getGifExport() : GifMaker = gifExport
 }
 
-class TheNumberOfFramesMultiplyUtil{
+class TheNumberOfFramesMultiplyUtil private constructer(){
     companion object {
         var ratio = 1f
 
@@ -244,9 +244,7 @@ class TheNumberOfFramesMultiplyUtil{
 }
 
 class Queue<T>{
-
-
-    var items:MutableList<T> = mutableListOf()
+    private val items:MutableList<T> = mutableListOf()
 
     fun isEmpty():Boolean = items.isEmpty()
 
