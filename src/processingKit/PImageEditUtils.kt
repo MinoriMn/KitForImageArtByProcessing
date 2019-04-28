@@ -5,7 +5,7 @@ import processing.core.PGraphics
 import processing.core.PImage
 import java.util.*
 
-class PImageEditUtils{
+class PImageEditUtils private constructer(){
     companion object {
         /**
          * drawImageByRandomEllipse 画像を楕円形で描画する(位置ランダム)
