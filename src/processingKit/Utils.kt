@@ -6,34 +6,30 @@ import java.io.File
 import javax.swing.*
 import gifAnimation.*
 
-class Utils private constructer(){
-    companion object {
-        fun pwd() : String {
-            val cd = File(".").absoluteFile.parent
-            LogUtil.i("cd", cd)
-            return cd
-        }
+object Utils{
+    fun pwd() : String {
+        val cd = File(".").absoluteFile.parent
+        LogUtil.i("cd", cd)
+        return cd
     }
 }
 
-class LogUtil private constructer(){
-    companion object {
-        var isLOG = false
+object LogUtil{
+    var isLOG = false
 
-        fun v(msg: String) = v("", msg)
-        fun v(tag:String, msg:String) = if(isLOG) println("V/${tag}: ${msg}") else null
+    fun v(msg: String) = v("", msg)
+    fun v(tag:String, msg:String) = if(isLOG) println("V/${tag}: ${msg}") else null
 
-        fun d(msg: String) = d("", msg)
-        fun d(tag:String, msg:String) = if(isLOG) println("D/${tag}: ${msg}")  else null
+    fun d(msg: String) = d("", msg)
+    fun d(tag:String, msg:String) = if(isLOG) println("D/${tag}: ${msg}")  else null
 
-        fun i(msg: String) = i("", msg)
-        fun i(tag:String, msg:String) = if(isLOG) println("I/${tag}: ${msg}")  else null
+    fun i(msg: String) = i("", msg)
+    fun i(tag:String, msg:String) = if(isLOG) println("I/${tag}: ${msg}")  else null
 
-        fun e(msg: String) = e("", msg)
-        fun e(tag:String, msg:String) = if(isLOG) println("E/${tag}: ${msg}")  else null
+    fun e(msg: String) = e("", msg)
+    fun e(tag:String, msg:String) = if(isLOG) println("E/${tag}: ${msg}")  else null
 
-        val TAG_DEBUG = "DEBUG"
-    }
+    val TAG_DEBUG = "DEBUG"
 }
 
 class SaveFrameUtil(@NotNull private val pApplet: PApplet, savePath: String? = null ,private val maxFrameNum: Int = Int.MAX_VALUE){
@@ -114,7 +110,7 @@ class SaveFrameUtil(@NotNull private val pApplet: PApplet, savePath: String? = n
 }
 
 class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = null, private val maxFrameNum: Int = Int.MAX_VALUE, repeat: Int? = null, quality: Int? = null, delay: Int? = null){
-    private val gifExport : GifMaker
+    private val gifExport : GifMaker?
     private var isSaveFrame = false
     private var framePrefix = "no_name"
     private var frameNum = 0
@@ -132,44 +128,50 @@ class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = nu
                 "フレーム出力の確認",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.INFORMATION_MESSAGE
-            ) != 1){ this.isSaveFrame = true }
+            ) != 1){
+            this.isSaveFrame = true
 
+            panel.removeAll()
+            panel.add(JLabel("書き出す画像の名前を決めてください。"))
+            this.framePrefix = JOptionPane.showInputDialog(
+                null,
+                panel,
+                "test_name") ?: "no_name"
 
-        panel.removeAll()
-        panel.add(JLabel("書き出す画像の名前を決めてください。"))
-        this.framePrefix = JOptionPane.showInputDialog(
-            null,
-            panel,
-            "test_name")
-
-        if(savePath != null) {
-            this.savePath = savePath
-        }else{
-            val chooser = JFileChooser()
-            chooser.selectedFile = File(Utils.pwd())
-            chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-            chooser.showOpenDialog(null)
-            val selectedFile = chooser.selectedFile
-            if(selectedFile != null){
-                this.savePath = selectedFile.absolutePath
-                LogUtil.i("SaveFrameUtils Path", "selected path ${this.savePath}")
+            if(savePath != null) {
+                this.savePath = savePath
             }else{
-                LogUtil.i("SaveFrameUtils Path", "didn't select ${this.savePath}")
+                val chooser = JFileChooser()
+                chooser.selectedFile = File(Utils.pwd())
+                chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+                chooser.showOpenDialog(null)
+                val selectedFile = chooser.selectedFile
+                if(selectedFile != null){
+                    this.savePath = selectedFile.absolutePath
+                    LogUtil.i("SaveFrameUtils Path", "selected path ${this.savePath}")
+                }else{
+                    LogUtil.i("SaveFrameUtils Path", "didn't select ${this.savePath}")
+                }
             }
+
         }
 
-        gifExport = GifMaker(pApplet, "${this.savePath}/${framePrefix}.gif")
+        if(isSaveFrame) {
+            gifExport = GifMaker(pApplet, "${this.savePath}/${framePrefix}.gif")
 
-        if(repeat != null){
-            gifExport.setRepeat(repeat)
-        }
+            if (repeat != null) {
+                gifExport.setRepeat(repeat)
+            }
 
-        if (quality != null) {
-            gifExport.setQuality(quality)
-        }
+            if (quality != null) {
+                gifExport.setQuality(quality)
+            }
 
-        if (delay != null) {
-            gifExport.setDelay(delay)
+            if (delay != null) {
+                gifExport.setDelay(delay)
+            }
+        }else{
+            gifExport = null
         }
     }
 
@@ -180,7 +182,7 @@ class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = nu
      */
     fun setRepeat(repeat : Int){
         if(isSaveFrame){
-            gifExport.setRepeat(repeat)
+            gifExport?.setRepeat(repeat)
         }
     }
 
@@ -189,13 +191,13 @@ class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = nu
      */
     fun setQuality(quality : Int){
         if(isSaveFrame){
-            gifExport.setQuality(quality)
+            gifExport?.setQuality(quality)
         }
     }
 
     fun setDelay(delay : Int){
         if(isSaveFrame){
-            gifExport.setDelay(delay)
+            gifExport?.setDelay(delay)
         }
     }
 
@@ -213,7 +215,7 @@ class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = nu
                     "Processing_saving_frame",
                     "Try to save ${framePrefix}.gif add frame:%04d".format(tempFrameNum)
                 )
-                gifExport.addFrame()
+                gifExport?.addFrame()
             }else if(tempFrameNum == maxFrameNum){
                 LogUtil.i(
                     "Processing_saving_frame",
@@ -226,20 +228,18 @@ class SaveGifUtil constructor (@NotNull pApplet: PApplet, savePath: String? = nu
 
     fun finish(){
         if(isSaveFrame){
-            gifExport.finish()
+            gifExport?.finish()
         }
     }
 
-    fun getGifExport() : GifMaker = gifExport
+    fun getGifExport() : GifMaker? = gifExport
 }
 
-class TheNumberOfFramesMultiplyUtil private constructer(){
-    companion object {
-        var ratio = 1f
+object TheNumberOfFramesMultiplyUtil{
+    var ratio = 1f
 
-        fun frameMultiply(frame: Int): Int{
-            return (frame * ratio).toInt()
-        }
+    fun frameMultiply(frame: Int): Int{
+        return (frame * ratio).toInt()
     }
 }
 

@@ -16,7 +16,7 @@ class TestAppDisplayManager() : AbstractAppDisplayManager(){
     private val imageResizeRatio = 0.5f
 
 //    private val saveFrameUtils = SaveFrameUtil(this, maxFrameNum = 2)
-    private val saveGifUtil = SaveGifUtil(this, null, 40, 0, 10, 20f)
+    private val saveGifUtil = SaveGifUtil(this, null, 15, 0, 10, 10f)
 
     lateinit var pImageManager: PImageManager
     private val imagesSize = imageNames.size

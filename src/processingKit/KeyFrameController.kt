@@ -1,6 +1,6 @@
 package processingKit
 
-import processingKit.TheNumberOfFramesMultiplyUtil.Companion.frameMultiply
+import processingKit.TheNumberOfFramesMultiplyUtil.frameMultiply
 
 /**
  * KeyFrameController
